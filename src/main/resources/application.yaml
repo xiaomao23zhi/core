@@ -84,10 +84,13 @@ server:
 
 logging:
   level:
+    ROOT: DEBUG
     io.lettuce: INFO
     org.springframework.data.redis: INFO
     com.alibaba.nacos: ERROR
     org.mongodb: INFO
+  config: classpath:logback-spring.xml
+  path: logs
 
 feign:
   hystrix:

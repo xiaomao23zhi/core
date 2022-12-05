@@ -3,7 +3,6 @@ package com.github.xiaomao23zhi.core.controller;
 import com.github.xiaomao23zhi.core.handler.JSONResponse;
 import com.github.xiaomao23zhi.core.handler.JSONResponseBuilder;
 import com.github.xiaomao23zhi.core.service.FFmpegService;
-import feign.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +30,10 @@ public class JavaCVController {
 
     @ApiOperation(value = "")
     @GetMapping(value = "/grab")
-    public JSONResponse<String> getHealth(@RequestParam String url, @RequestParam int frames) {
+    public JSONResponse<String> getHealth(@RequestParam String url,
+                                          @RequestParam int interval, @RequestParam int total) {
 
-        String result = ffmpegService.grabFrame(url, frames);
+        String result = ffmpegService.grabFrame(url, interval, total);
 
         return JSONResponseBuilder.success(result);
     }

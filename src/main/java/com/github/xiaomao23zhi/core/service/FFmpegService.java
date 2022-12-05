@@ -19,24 +19,45 @@ import java.io.IOException;
 @Slf4j
 public class FFmpegService {
 
-    public String grabFrame(String streamUrl, int frames) {
+    public String grabFrame(String streamUrl, int interval, int total) {
 
-        try (FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(streamUrl)) {
+        try (FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(streamUrl)) {
 
             grabber.setOption("hwaccel", "cuda");
 
             grabber.start();
 
-            try (Java2DFrameConverter java2DFrameConverter = new Java2DFrameConverter()) {
-                for (int i = 0; i < frames; i++) {
-                    Frame frame = grabber.grabFrame();
-                    BufferedImage bufferedImage = java2DFrameConverter.convert(frame);
+            int width = grabber.getImageWidth();
+            int height = grabber.getImageHeight();
+            int frameRate = (int) Math.round(grabber.getFrameRate());
 
-                    ImageIO.write(bufferedImage, "png", new File("frame-dump/video-frame-" + System.currentTimeMillis() + ".png"));
+            log.info("video width:{} height:{} ,{} fps ,video codec:{} length:{}", width, height,
+                    grabber.getFrameRate(), grabber.getVideoCodec(),
+                    grabber.getLengthInFrames());
+
+            Frame frame;
+
+            int i = 0;
+            int j = 0;
+
+            while ((frame = grabber.grabFrame(false, true, true, false)) != null) {
+
+                if (i % (frameRate * interval) == 0.0) {
+
+                    log.debug("======== Frame: {}, Total: {} ========", i, j);
+                    toImage(frame, "");
+
+                    if (j++ > total) {
+                        break;
+                    }
                 }
-            } catch (IOException e) {
-                log.error(e.getMessage());
+
+                i++;
             }
+
+            log.info("======== {} ========", i);
+
+            grabber.stop();
 
         } catch (FrameGrabber.Exception e) {
             log.error(e.getMessage());
@@ -45,4 +66,20 @@ public class FFmpegService {
         return "";
     }
 
+    public boolean toImage(Frame frame, String targetPath) {
+
+        boolean result = true;
+
+        try (Java2DFrameConverter converter = new Java2DFrameConverter()) {
+
+            BufferedImage bufferedImage = converter.convert(frame);
+            ImageIO.write(bufferedImage, "png", new File("/tmp/video-frame-" + System.currentTimeMillis() + ".png"));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+            result = false;
+        }
+
+        return result;
+    }
 }
