@@ -1,6 +1,6 @@
 spring:
   application:
-    name: javart
+    name: core
   profiles:
     active: dev
   mvc:
@@ -16,10 +16,10 @@ spring:
     mongodb:
       host: ${MONGODB_ADDR:localhost}
       port: ${MONGODB_PORT:27017}
-      database: ${MONGODB_DATABASE:javart}
-      username: ${MONGODB_USERNAME:javart}
-      password: ${MONGODB_PASSWORD:ENC(QWGVInKktEhN/rSVeQk1YmQOm/Y6y0rar4ruZEQYUwo=)}
-      authentication-database: ${MONGODB_DATABASE:javart}
+      database: ${MONGODB_DATABASE:core}
+      username: ${MONGODB_USERNAME:core}
+      password: ${MONGODB_PASSWORD:ENC(Wjif7aTgHl6wyjccGvaVq1SXueBH4nIK)}
+      authentication-database: ${MONGODB_DATABASE:core}
       auto-index-creation: true
   redis:
     host: ${REDIS_ADDR:localhost}
@@ -66,7 +66,7 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /javart
+    context-path: /core
   #    session:
   #      cookie:
   #        http-only: true
@@ -107,7 +107,7 @@ app:
 jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
-    password: ${JASYPT_ENCRYPTOR_PASSWORD:dp@ftp}
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:core}
 
 xss:
   enabled: true
