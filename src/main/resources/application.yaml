@@ -12,6 +12,11 @@ spring:
   jackson:
     date-format: com.fasterxml.jackson.databind.util.StdDateFormat
     time-zone: Asia/Shanghai
+  security:
+    user:
+      name: admin
+      roles: admin
+      password: admin
   data:
     mongodb:
       host: ${MONGODB_ADDR:localhost}
@@ -61,18 +66,18 @@ spring:
           #              user: root
           #              password: mysql
           threadPool:
-            threadCount: 1000
+            threadCount: 1
 
 server:
   port: 8080
   servlet:
     context-path: /core
-  #    session:
-  #      cookie:
-  #        http-only: true
-  #  session:
-  #    cookie:
-  #      secure: false
+    session:
+      cookie:
+        http-only: true
+  session:
+    cookie:
+      secure: false
   error:
     whitelabel:
       enabled: false
