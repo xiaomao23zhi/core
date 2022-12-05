@@ -1,0 +1,115 @@
+spring:
+  application:
+    name: javart
+  profiles:
+    active: dev
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  aop:
+    auto: true
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.StdDateFormat
+    time-zone: Asia/Shanghai
+  data:
+    mongodb:
+      host: ${MONGODB_ADDR:localhost}
+      port: ${MONGODB_PORT:27017}
+      database: ${MONGODB_DATABASE:javart}
+      username: ${MONGODB_USERNAME:javart}
+      password: ${MONGODB_PASSWORD:ENC(QWGVInKktEhN/rSVeQk1YmQOm/Y6y0rar4ruZEQYUwo=)}
+      authentication-database: ${MONGODB_DATABASE:javart}
+      auto-index-creation: true
+  redis:
+    host: ${REDIS_ADDR:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:ENC(RsRcm9YX4Ek8rb1ZEjMwE8X1pkuwRQYAv5A4TV6sWn8=)}
+    lettuce:
+      pool:
+        max-active: -1
+        max-wait: 2000ms
+        max-idle: 8
+        min-idle: 0
+    stream:
+      database: 1
+      maxLen: 10000
+      timeout: 2000ms
+  quartz:
+    properties:
+      org:
+        quartz:
+          jobStore:
+          #            mongoUri: ${spring.data.mongodb.uri}
+          #            dbName: aiv
+          #            collectionPrefix: quartz_
+          #            instanceName: quartzMongoInstance
+          #            misfireThreshold: 1000
+          #            isClustered: true
+          #            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+          #            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+          #            tablePrefix: QRTZ_
+          #            dataSource: mysql
+          #            isClustered: true
+          #          scheduler:
+          #            instanceId: AUTO
+          #            instanceName: aiv
+          #          dataSource:
+          #            mysql:
+          #              driver: com.mysql.jdbc.Driver
+          #              URL: jdbc:mysql://${MYSQL_SERVER:localhost:3306}/quartz
+          #              user: root
+          #              password: mysql
+          threadPool:
+            threadCount: 1000
+
+server:
+  port: 8080
+  servlet:
+    context-path: /javart
+  #    session:
+  #      cookie:
+  #        http-only: true
+  #  session:
+  #    cookie:
+  #      secure: false
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    io.lettuce: INFO
+    org.springframework.data.redis: INFO
+    com.alibaba.nacos: ERROR
+    org.mongodb: INFO
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: false
+    disable-ssl-validation: true
+  okhttp:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 10000
+        loggerLevel: full
+
+app:
+  conf:
+    delete-of-days-before: 30
+    streaming-timeout: 60
+
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:dp@ftp}
+
+xss:
+  enabled: true
+  excludes:
+  urlPatterns: /*
