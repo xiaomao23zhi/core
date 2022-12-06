@@ -23,7 +23,8 @@ public class FFmpegService {
 
         try (FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(streamUrl)) {
 
-            grabber.setOption("hwaccel", "cuda");
+//            grabber.setOption("hwaccel", "cuda");
+            grabber.setVideoCodecName("h264_cuvid");
 
             grabber.start();
 
@@ -32,7 +33,7 @@ public class FFmpegService {
             int frameRate = (int) Math.round(grabber.getFrameRate());
 
             log.info("video width:{} height:{} ,{} fps ,video codec:{} length:{}", width, height,
-                    grabber.getFrameRate(), grabber.getVideoCodec(),
+                    grabber.getFrameRate(), grabber.getVideoCodecName(),
                     grabber.getLengthInFrames());
 
             Frame frame;
